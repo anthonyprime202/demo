@@ -60,6 +60,7 @@ class ProfileSelectorChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return ActionChip(
       avatar: Icon(profileMode.icon, size: 20),
       label: Text(profileMode.label),
@@ -68,6 +69,44 @@ class ProfileSelectorChip extends StatelessWidget {
         side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
       ),
       backgroundColor: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+=======
+    final colorScheme = Theme.of(context).colorScheme;
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(30),
+      child: Ink(
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceVariant.withOpacity(0.45),
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: colorScheme.outlineVariant, width: 1.2),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              profileMode.icon,
+              size: 20,
+              color: colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              profileMode.label,
+              style: Theme.of(context)
+                  .textTheme
+                  .labelLarge
+                  ?.copyWith(color: colorScheme.onSurfaceVariant),
+            ),
+            const SizedBox(width: 6),
+            Icon(
+              Icons.keyboard_arrow_down,
+              size: 18,
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ],
+        ),
+      ),
+>>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
     );
   }
 }

@@ -1,5 +1,11 @@
 import 'dart:async';
+<<<<<<< HEAD
 
+=======
+import 'dart:math' as math;
+
+import 'package:fl_chart/fl_chart.dart';
+>>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
 import 'package:flutter/material.dart';
 
 import '../widgets/profile_selector.dart';
@@ -8,10 +14,30 @@ class ChatMessage {
   ChatMessage({
     required this.text,
     required this.isUser,
+<<<<<<< HEAD
+=======
+    this.insight,
+>>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
   });
 
   final String text;
   final bool isUser;
+<<<<<<< HEAD
+=======
+  final ChatInsightData? insight;
+}
+
+class ChatInsightData {
+  ChatInsightData({
+    required this.temperatureProfile,
+    required this.salinityProfile,
+    required this.oxygenSeries,
+  });
+
+  final List<FlSpot> temperatureProfile;
+  final List<FlSpot> salinityProfile;
+  final List<FlSpot> oxygenSeries;
+>>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
 }
 
 class ChatPage extends StatefulWidget {
@@ -54,13 +80,24 @@ class _ChatPageState extends State<ChatPage> {
 
     _scrollToBottom();
 
+<<<<<<< HEAD
     Timer(const Duration(milliseconds: 1800), () {
       if (!mounted) return;
       final profile = widget.profileNotifier?.value ?? ProfileMode.general;
+=======
+    final profile = widget.profileNotifier?.value ?? ProfileMode.general;
+    Timer(const Duration(milliseconds: 1800), () {
+      if (!mounted) return;
+      final insight = _buildInsightData(profile, trimmed);
+>>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
       setState(() {
         _messages.add(ChatMessage(
           isUser: false,
           text: _mockResponse(profile, trimmed),
+<<<<<<< HEAD
+=======
+          insight: insight,
+>>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
         ));
         _isGenerating = false;
       });
@@ -80,7 +117,43 @@ class _ChatPageState extends State<ChatPage> {
           'Ocean insight: surface temps are trending warmer around the Indian peninsula.',
     };
 
+<<<<<<< HEAD
     return '$baseIntro\n\nBased on your prompt "$query", I\'ve staged depth vs temperature and salinity charts plus an oxygen anomaly timeline. Tap the Analysis tab to compare floats, overlay cyclonic events, or export NetCDF snapshots. 🐬';
+=======
+    return '$baseIntro\n\nBased on your prompt "$query", I\'ve staged depth vs temperature and salinity charts plus an oxygen anomaly timeline below. Tap the Analysis tab to compare floats, overlay cyclonic events, or export NetCDF snapshots. 🐬';
+  }
+
+  ChatInsightData _buildInsightData(ProfileMode profile, String query) {
+    final hash = query.hashCode.abs();
+    final double tempOffset = ((hash % 7) - 3) * 0.12;
+    final double salinityOffset = (((hash >> 3) % 5) - 2) * 0.05;
+    final double oxygenOffset = (((hash >> 6) % 5) - 2) * 0.07;
+    final double profileAdjustment = profile.index * 0.15;
+
+    final temperatureProfile = List<FlSpot>.generate(7, (index) {
+      final depth = index * 320.0;
+      final base = 29.2 - index * 0.95 - profileAdjustment;
+      return FlSpot(depth, base - tempOffset);
+    });
+
+    final salinityProfile = List<FlSpot>.generate(7, (index) {
+      final depth = index * 320.0;
+      final base = 35.1 - index * 0.14 + salinityOffset;
+      return FlSpot(depth, base);
+    });
+
+    final oxygenSeries = List<FlSpot>.generate(8, (index) {
+      final day = index.toDouble();
+      final base = 5.3 + math.sin((index / 7) * math.pi) * 0.35;
+      return FlSpot(day, base + oxygenOffset);
+    });
+
+    return ChatInsightData(
+      temperatureProfile: temperatureProfile,
+      salinityProfile: salinityProfile,
+      oxygenSeries: oxygenSeries,
+    );
+>>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
   }
 
   void _scrollToBottom() {
@@ -140,19 +213,47 @@ class _ChatPageState extends State<ChatPage> {
               final textColor = message.isUser
                   ? theme.colorScheme.onPrimaryContainer
                   : theme.colorScheme.onSurfaceVariant;
+<<<<<<< HEAD
               return Align(
                 alignment: alignment,
                 child: Container(
                   constraints: const BoxConstraints(maxWidth: 320),
+=======
+              final bubbleMaxWidth =
+                  MediaQuery.of(context).size.width * (message.isUser ? 0.7 : 0.9);
+              final insight = message.insight;
+              return Align(
+                alignment: alignment,
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: bubbleMaxWidth),
+>>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
                   padding:
                       const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
                   decoration: BoxDecoration(
                     color: bubbleColor,
                     borderRadius: BorderRadius.circular(20),
                   ),
+<<<<<<< HEAD
                   child: Text(
                     message.text,
                     style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
+=======
+                  child: Column(
+                    crossAxisAlignment: message.isUser
+                        ? CrossAxisAlignment.end
+                        : CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        message.text,
+                        style: theme.textTheme.bodyMedium
+                            ?.copyWith(color: textColor),
+                      ),
+                      if (!message.isUser && insight != null) ...[
+                        const SizedBox(height: 12),
+                        _buildInsightCharts(insight, theme),
+                      ],
+                    ],
+>>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
                   ),
                 ),
               );
@@ -170,7 +271,10 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _buildInputBar(BuildContext context) {
     final theme = Theme.of(context);
+<<<<<<< HEAD
     final selectedMode = widget.profileNotifier?.value ?? ProfileMode.general;
+=======
+>>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
@@ -219,6 +323,7 @@ class _ChatPageState extends State<ChatPage> {
               onSubmitted: (_) => _sendMessage(),
             ),
           ),
+<<<<<<< HEAD
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: ProfileSelectorChip(
@@ -231,6 +336,9 @@ class _ChatPageState extends State<ChatPage> {
               },
             ),
           ),
+=======
+          const SizedBox(width: 4),
+>>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: FilledButton.tonal(
@@ -246,4 +354,233 @@ class _ChatPageState extends State<ChatPage> {
       ),
     );
   }
+<<<<<<< HEAD
+=======
+
+  Widget _buildInsightCharts(ChatInsightData insight, ThemeData theme) {
+    final scheme = theme.colorScheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildDepthProfileChart(
+          title: 'Temperature vs depth',
+          spots: insight.temperatureProfile,
+          color: Colors.orangeAccent,
+          unitSuffix: '°C',
+          theme: theme,
+        ),
+        const SizedBox(height: 14),
+        _buildDepthProfileChart(
+          title: 'Salinity vs depth',
+          spots: insight.salinityProfile,
+          color: scheme.primary,
+          unitSuffix: 'PSU',
+          theme: theme,
+        ),
+        const SizedBox(height: 14),
+        Text(
+          'Oxygen trend (7 days)',
+          style: theme.textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: scheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 6),
+        SizedBox(
+          height: 170,
+          child: LineChart(_oxygenSeriesData(insight.oxygenSeries, theme)),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDepthProfileChart({
+    required String title,
+    required List<FlSpot> spots,
+    required Color color,
+    required String unitSuffix,
+    required ThemeData theme,
+  }) {
+    final minY = spots.map((e) => e.y).reduce(math.min) - 0.4;
+    final maxY = spots.map((e) => e.y).reduce(math.max) + 0.4;
+    final interval = _axisInterval(minY, maxY);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: theme.textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 6),
+        SizedBox(
+          height: 180,
+          child: LineChart(
+            LineChartData(
+              minX: 0,
+              maxX: 2000,
+              minY: minY,
+              maxY: maxY,
+              lineTouchData: const LineTouchData(enabled: false),
+              gridData: FlGridData(
+                show: true,
+                horizontalInterval: interval,
+                verticalInterval: 500,
+                getDrawingHorizontalLine: (value) => FlLine(
+                  color: theme.colorScheme.outlineVariant.withOpacity(0.25),
+                  strokeWidth: 1,
+                ),
+                getDrawingVerticalLine: (value) => FlLine(
+                  color: theme.colorScheme.outlineVariant.withOpacity(0.25),
+                  strokeWidth: 1,
+                ),
+              ),
+              titlesData: FlTitlesData(
+                topTitles:
+                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                rightTitles:
+                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                bottomTitles: AxisTitles(
+                  axisNameWidget: const Padding(
+                    padding: EdgeInsets.only(top: 4),
+                    child: Text('Depth (m)', style: TextStyle(fontSize: 11)),
+                  ),
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    interval: 500,
+                    reservedSize: 44,
+                    getTitlesWidget: (value, meta) {
+                      if (value % 500 != 0) return const SizedBox.shrink();
+                      return Text('${value.toInt()}',
+                          style: const TextStyle(fontSize: 10));
+                    },
+                  ),
+                ),
+                leftTitles: AxisTitles(
+                  axisNameWidget: Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: Text(unitSuffix,
+                        style: const TextStyle(fontSize: 11)),
+                  ),
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    interval: interval,
+                    reservedSize: 46,
+                    getTitlesWidget: (value, meta) => Text(
+                      value.toStringAsFixed(1),
+                      style: const TextStyle(fontSize: 10),
+                    ),
+                  ),
+                ),
+              ),
+              borderData: FlBorderData(
+                show: true,
+                border: Border.all(
+                  color: theme.colorScheme.outlineVariant.withOpacity(0.4),
+                ),
+              ),
+              lineBarsData: [
+                LineChartBarData(
+                  spots: spots,
+                  color: color,
+                  barWidth: 3,
+                  isCurved: true,
+                  dotData: const FlDotData(show: false),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  LineChartData _oxygenSeriesData(List<FlSpot> spots, ThemeData theme) {
+    final minY = spots.map((e) => e.y).reduce(math.min) - 0.2;
+    final maxY = spots.map((e) => e.y).reduce(math.max) + 0.2;
+    final maxX = spots.map((e) => e.x).reduce(math.max);
+    final interval = _axisInterval(minY, maxY);
+
+    return LineChartData(
+      minX: 0,
+      maxX: maxX,
+      minY: minY,
+      maxY: maxY,
+      lineTouchData: const LineTouchData(enabled: false),
+      gridData: FlGridData(
+        show: true,
+        horizontalInterval: interval,
+        verticalInterval: 1,
+        getDrawingHorizontalLine: (value) => FlLine(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.25),
+          strokeWidth: 1,
+        ),
+        getDrawingVerticalLine: (value) => FlLine(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.2),
+          strokeWidth: 1,
+        ),
+      ),
+      titlesData: FlTitlesData(
+        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        leftTitles: AxisTitles(
+          axisNameWidget: const Padding(
+            padding: EdgeInsets.only(right: 6),
+            child: Text('ml/l', style: TextStyle(fontSize: 11)),
+          ),
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: interval,
+            reservedSize: 42,
+            getTitlesWidget: (value, meta) => Text(
+              value.toStringAsFixed(2),
+              style: const TextStyle(fontSize: 10),
+            ),
+          ),
+        ),
+        bottomTitles: AxisTitles(
+          axisNameWidget: const Padding(
+            padding: EdgeInsets.only(top: 4),
+            child: Text('Day', style: TextStyle(fontSize: 11)),
+          ),
+          sideTitles: SideTitles(
+            showTitles: true,
+            interval: 1,
+            getTitlesWidget: (value, meta) => Text(
+              'D${value.toInt() + 1}',
+              style: const TextStyle(fontSize: 10),
+            ),
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: Border.all(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.4),
+        ),
+      ),
+      lineBarsData: [
+        LineChartBarData(
+          spots: spots,
+          color: theme.colorScheme.primary,
+          barWidth: 3,
+          isCurved: true,
+          dotData: const FlDotData(show: true),
+        ),
+      ],
+    );
+  }
+
+  double _axisInterval(double min, double max) {
+    final range = max - min;
+    if (range <= 0) {
+      return 1;
+    }
+    final interval = range / 4;
+    return (interval.clamp(0.2, 3.0)) as double;
+  }
+>>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
 }
