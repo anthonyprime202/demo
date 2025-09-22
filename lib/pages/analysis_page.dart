@@ -1,17 +1,12 @@
-<<<<<<< HEAD
-=======
 import 'dart:math' as math;
 
 import 'package:fl_chart/fl_chart.dart';
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../widgets/profile_selector.dart';
 
-<<<<<<< HEAD
-=======
 enum FloatStatus { stable, watch, alert }
 
 extension FloatStatusX on FloatStatus {
@@ -49,7 +44,6 @@ extension FloatStatusX on FloatStatus {
   }
 }
 
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
 class FloatMarkerData {
   const FloatMarkerData({
     required this.id,
@@ -58,14 +52,11 @@ class FloatMarkerData {
     required this.depthHighlight,
     required this.salinity,
     required this.oxygen,
-<<<<<<< HEAD
-=======
     required this.status,
     required this.temperatureProfile,
     required this.salinityProfile,
     required this.oxygenSeries,
     required this.lastUpdated,
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
   });
 
   final String id;
@@ -74,14 +65,11 @@ class FloatMarkerData {
   final double depthHighlight;
   final double salinity;
   final double oxygen;
-<<<<<<< HEAD
-=======
   final FloatStatus status;
   final List<FlSpot> temperatureProfile;
   final List<FlSpot> salinityProfile;
   final List<FlSpot> oxygenSeries;
   final DateTime lastUpdated;
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
 }
 
 class AnalysisPage extends StatefulWidget {
@@ -95,35 +83,6 @@ class AnalysisPage extends StatefulWidget {
 
 class _AnalysisPageState extends State<AnalysisPage> {
   final MapController _mapController = MapController();
-<<<<<<< HEAD
-
-  final List<FloatMarkerData> _markers = const [
-    FloatMarkerData(
-      id: 'IN-9023',
-      position: LatLng(15.5, 73.8),
-      latestTemperature: 28.4,
-      depthHighlight: 120,
-      salinity: 34.8,
-      oxygen: 5.6,
-    ),
-    FloatMarkerData(
-      id: 'IN-1775',
-      position: LatLng(9.9, 76.2),
-      latestTemperature: 27.1,
-      depthHighlight: 140,
-      salinity: 35.2,
-      oxygen: 6.1,
-    ),
-    FloatMarkerData(
-      id: 'IN-4410',
-      position: LatLng(18.1, 72.9),
-      latestTemperature: 29.2,
-      depthHighlight: 95,
-      salinity: 34.5,
-      oxygen: 5.2,
-    ),
-  ];
-=======
   late final List<FloatMarkerData> _markers = _buildMarkers();
   FloatMarkerData? _selectedMarker;
 
@@ -231,7 +190,6 @@ class _AnalysisPageState extends State<AnalysisPage> {
     }
     return '${difference.inDays} d ago';
   }
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
 
   void _openFloatDetails(FloatMarkerData data) {
     final profileMode = widget.profileNotifier?.value ?? ProfileMode.general;
@@ -267,14 +225,6 @@ class _AnalysisPageState extends State<AnalysisPage> {
                                   .titleLarge
                                   ?.copyWith(fontWeight: FontWeight.bold),
                             ),
-<<<<<<< HEAD
-                            Text('Last profile: ${data.latestTemperature.toStringAsFixed(1)}°C at ${data.depthHighlight.toStringAsFixed(0)} m'),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-=======
                             Text(
                               'Last profile: ${data.latestTemperature.toStringAsFixed(1)}°C at ${data.depthHighlight.toStringAsFixed(0)} m',
                             ),
@@ -297,7 +247,6 @@ class _AnalysisPageState extends State<AnalysisPage> {
                         .bodySmall
                         ?.copyWith(color: Theme.of(context).colorScheme.outline),
                   ),
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
                   const SizedBox(height: 20),
                   Wrap(
                     spacing: 12,
@@ -324,23 +273,10 @@ class _AnalysisPageState extends State<AnalysisPage> {
                     ],
                   ),
                   const SizedBox(height: 24),
-<<<<<<< HEAD
-                  _InsightBanner(profileMode: profileMode),
-                  const SizedBox(height: 24),
-                  Text(
-                    'Profiles in dashboard',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 12),
-=======
                   _InsightBanner(profileMode: profileMode, data: data),
                   const SizedBox(height: 24),
                   _ProfileChartsSection(data: data),
                   const SizedBox(height: 24),
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
                   const _ProfilesDescription(),
                   const SizedBox(height: 24),
                   _DownloadRow(floatId: data.id),
@@ -365,12 +301,6 @@ class _AnalysisPageState extends State<AnalysisPage> {
             interactionOptions: const InteractionOptions(
               flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
             ),
-<<<<<<< HEAD
-          ),
-          children: [
-            TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-=======
             onTap: (_, __) {
               setState(() => _selectedMarker = null);
             },
@@ -379,7 +309,6 @@ class _AnalysisPageState extends State<AnalysisPage> {
             TileLayer(
               urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
               subdomains: const ['a', 'b', 'c'],
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
               userAgentPackageName: 'com.example.floatchat',
             ),
             MarkerLayer(
@@ -387,41 +316,6 @@ class _AnalysisPageState extends State<AnalysisPage> {
                   .map(
                     (marker) => Marker(
                       point: marker.position,
-<<<<<<< HEAD
-                      width: 80,
-                      height: 80,
-                      child: GestureDetector(
-                        onTap: () => _openFloatDetails(marker),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.lightBlueAccent.withOpacity(0.85),
-                            borderRadius: BorderRadius.circular(18),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.15),
-                                blurRadius: 10,
-                                offset: const Offset(0, 6),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text('🐬', style: TextStyle(fontSize: 20)),
-                              Text(
-                                marker.id,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-=======
                       width: 90,
                       height: 90,
                       child: GestureDetector(
@@ -430,7 +324,6 @@ class _AnalysisPageState extends State<AnalysisPage> {
                           _openFloatDetails(marker);
                         },
                         child: _MapMarker(status: marker.status, label: marker.id),
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
                       ),
                     ),
                   )
@@ -473,14 +366,6 @@ class _AnalysisPageState extends State<AnalysisPage> {
             ),
           ),
         ),
-<<<<<<< HEAD
-        Positioned(
-          left: 16,
-          bottom: 16,
-          right: 16,
-          child: _RealtimeInsightPanel(markers: _markers),
-        ),
-=======
         if (_selectedMarker != null)
           Positioned(
             left: 16,
@@ -491,7 +376,6 @@ class _AnalysisPageState extends State<AnalysisPage> {
               onViewDetails: () => _openFloatDetails(_selectedMarker!),
             ),
           ),
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
       ],
     );
   }
@@ -540,24 +424,6 @@ class _MetricCard extends StatelessWidget {
 }
 
 class _InsightBanner extends StatelessWidget {
-<<<<<<< HEAD
-  const _InsightBanner({required this.profileMode});
-
-  final ProfileMode profileMode;
-
-  @override
-  Widget build(BuildContext context) {
-    final tone = switch (profileMode) {
-      ProfileMode.agency =>
-          'Policy insight: surface warming exceeds treaty targets near EEZ corridors. Della suggests reviewing adaptive shipping advisories.',
-      ProfileMode.researcher =>
-          'Research insight: salinity drop coincides with freshwater plume on 12 June. Consider overlaying cyclone Biparjoy tracks.',
-      ProfileMode.educator =>
-          'Teaching tip: compare pre- and post-monsoon profiles to explain thermal layering to students.',
-      ProfileMode.general =>
-          'Ocean note: it\'s a great time to watch how currents carry warm water along India\'s coasts.',
-    };
-=======
   const _InsightBanner({required this.profileMode, required this.data});
 
   final ProfileMode profileMode;
@@ -585,7 +451,6 @@ class _InsightBanner extends StatelessWidget {
           'Great moment to follow Della’s insight trail and see the ocean breathe in real-time.',
     };
 
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -593,22 +458,11 @@ class _InsightBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
       ),
       child: Row(
-<<<<<<< HEAD
-=======
         crossAxisAlignment: CrossAxisAlignment.start,
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
         children: [
           const Text('🐬', style: TextStyle(fontSize: 28)),
           const SizedBox(width: 12),
           Expanded(
-<<<<<<< HEAD
-            child: Text(
-              tone,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: Theme.of(context).colorScheme.onPrimaryContainer),
-=======
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -632,7 +486,6 @@ class _InsightBanner extends StatelessWidget {
                       ),
                 ),
               ],
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
             ),
           ),
         ],
@@ -641,8 +494,6 @@ class _InsightBanner extends StatelessWidget {
   }
 }
 
-<<<<<<< HEAD
-=======
 class _ProfileChartsSection extends StatelessWidget {
   const _ProfileChartsSection({required this.data});
 
@@ -1117,7 +968,6 @@ class _MarkerInsightCard extends StatelessWidget {
   }
 }
 
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
 class _ProfilesDescription extends StatelessWidget {
   const _ProfilesDescription();
 
@@ -1194,66 +1044,3 @@ class _DownloadRow extends StatelessWidget {
   }
 }
 
-<<<<<<< HEAD
-class _RealtimeInsightPanel extends StatelessWidget {
-  const _RealtimeInsightPanel({required this.markers});
-
-  final List<FloatMarkerData> markers;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface.withOpacity(0.9),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 18,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                const Text('🐬', style: TextStyle(fontSize: 24)),
-                const SizedBox(width: 12),
-                Text(
-                  'Real-time AI Insights',
-                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            ...markers.map(
-              (marker) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  children: [
-                    const Icon(Icons.radar, size: 18),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Float ${marker.id}: Surface temp ${marker.latestTemperature.toStringAsFixed(1)}°C, anomaly +${(marker.latestTemperature - 27).toStringAsFixed(1)}°C. Oxygen ${marker.oxygen.toStringAsFixed(1)} ml/l.',
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-=======
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe

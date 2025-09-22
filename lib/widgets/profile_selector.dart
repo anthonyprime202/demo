@@ -60,16 +60,6 @@ class ProfileSelectorChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    return ActionChip(
-      avatar: Icon(profileMode.icon, size: 20),
-      label: Text(profileMode.label),
-      onPressed: onPressed,
-      shape: StadiumBorder(
-        side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
-      ),
-      backgroundColor: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
-=======
     final colorScheme = Theme.of(context).colorScheme;
     return InkWell(
       onTap: onPressed,
@@ -106,7 +96,6 @@ class ProfileSelectorChip extends StatelessWidget {
           ],
         ),
       ),
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
     );
   }
 }

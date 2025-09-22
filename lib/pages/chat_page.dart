@@ -1,11 +1,7 @@
 import 'dart:async';
-<<<<<<< HEAD
-
-=======
 import 'dart:math' as math;
 
 import 'package:fl_chart/fl_chart.dart';
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
 import 'package:flutter/material.dart';
 
 import '../widgets/profile_selector.dart';
@@ -14,16 +10,11 @@ class ChatMessage {
   ChatMessage({
     required this.text,
     required this.isUser,
-<<<<<<< HEAD
-=======
     this.insight,
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
   });
 
   final String text;
   final bool isUser;
-<<<<<<< HEAD
-=======
   final ChatInsightData? insight;
 }
 
@@ -37,7 +28,6 @@ class ChatInsightData {
   final List<FlSpot> temperatureProfile;
   final List<FlSpot> salinityProfile;
   final List<FlSpot> oxygenSeries;
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
 }
 
 class ChatPage extends StatefulWidget {
@@ -80,24 +70,15 @@ class _ChatPageState extends State<ChatPage> {
 
     _scrollToBottom();
 
-<<<<<<< HEAD
-    Timer(const Duration(milliseconds: 1800), () {
-      if (!mounted) return;
-      final profile = widget.profileNotifier?.value ?? ProfileMode.general;
-=======
     final profile = widget.profileNotifier?.value ?? ProfileMode.general;
     Timer(const Duration(milliseconds: 1800), () {
       if (!mounted) return;
       final insight = _buildInsightData(profile, trimmed);
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
       setState(() {
         _messages.add(ChatMessage(
           isUser: false,
           text: _mockResponse(profile, trimmed),
-<<<<<<< HEAD
-=======
           insight: insight,
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
         ));
         _isGenerating = false;
       });
@@ -117,9 +98,6 @@ class _ChatPageState extends State<ChatPage> {
           'Ocean insight: surface temps are trending warmer around the Indian peninsula.',
     };
 
-<<<<<<< HEAD
-    return '$baseIntro\n\nBased on your prompt "$query", I\'ve staged depth vs temperature and salinity charts plus an oxygen anomaly timeline. Tap the Analysis tab to compare floats, overlay cyclonic events, or export NetCDF snapshots. 🐬';
-=======
     return '$baseIntro\n\nBased on your prompt "$query", I\'ve staged depth vs temperature and salinity charts plus an oxygen anomaly timeline below. Tap the Analysis tab to compare floats, overlay cyclonic events, or export NetCDF snapshots. 🐬';
   }
 
@@ -153,7 +131,6 @@ class _ChatPageState extends State<ChatPage> {
       salinityProfile: salinityProfile,
       oxygenSeries: oxygenSeries,
     );
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
   }
 
   void _scrollToBottom() {
@@ -213,12 +190,6 @@ class _ChatPageState extends State<ChatPage> {
               final textColor = message.isUser
                   ? theme.colorScheme.onPrimaryContainer
                   : theme.colorScheme.onSurfaceVariant;
-<<<<<<< HEAD
-              return Align(
-                alignment: alignment,
-                child: Container(
-                  constraints: const BoxConstraints(maxWidth: 320),
-=======
               final bubbleMaxWidth =
                   MediaQuery.of(context).size.width * (message.isUser ? 0.7 : 0.9);
               final insight = message.insight;
@@ -226,18 +197,12 @@ class _ChatPageState extends State<ChatPage> {
                 alignment: alignment,
                 child: Container(
                   constraints: BoxConstraints(maxWidth: bubbleMaxWidth),
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
                   padding:
                       const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
                   decoration: BoxDecoration(
                     color: bubbleColor,
                     borderRadius: BorderRadius.circular(20),
                   ),
-<<<<<<< HEAD
-                  child: Text(
-                    message.text,
-                    style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
-=======
                   child: Column(
                     crossAxisAlignment: message.isUser
                         ? CrossAxisAlignment.end
@@ -253,7 +218,6 @@ class _ChatPageState extends State<ChatPage> {
                         _buildInsightCharts(insight, theme),
                       ],
                     ],
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
                   ),
                 ),
               );
@@ -271,10 +235,6 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _buildInputBar(BuildContext context) {
     final theme = Theme.of(context);
-<<<<<<< HEAD
-    final selectedMode = widget.profileNotifier?.value ?? ProfileMode.general;
-=======
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
@@ -323,22 +283,7 @@ class _ChatPageState extends State<ChatPage> {
               onSubmitted: (_) => _sendMessage(),
             ),
           ),
-<<<<<<< HEAD
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: ProfileSelectorChip(
-              profileMode: selectedMode,
-              onPressed: () {
-                final notifier = widget.profileNotifier;
-                if (notifier != null) {
-                  showProfileSelector(context, notifier);
-                }
-              },
-            ),
-          ),
-=======
           const SizedBox(width: 4),
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: FilledButton.tonal(
@@ -354,8 +299,6 @@ class _ChatPageState extends State<ChatPage> {
       ),
     );
   }
-<<<<<<< HEAD
-=======
 
   Widget _buildInsightCharts(ChatInsightData insight, ThemeData theme) {
     final scheme = theme.colorScheme;
@@ -582,5 +525,4 @@ class _ChatPageState extends State<ChatPage> {
     final interval = range / 4;
     return (interval.clamp(0.2, 3.0)) as double;
   }
->>>>>>> 83eb138ec91cfde309804726e6ab5afece7aaffe
 }
