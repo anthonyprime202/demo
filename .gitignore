@@ -1,0 +1,15 @@
+# Flutter/Dart/Pub related
+.dart_tool/
+.packages
+pubspec.lock
+build/
+android/
+ios/
+web/
+linux/
+macos/
+windows/
+coverage/
+*.iml
+.idea/
+*.log

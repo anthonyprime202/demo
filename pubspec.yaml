@@ -1,0 +1,21 @@
+name: floatchat
+description: A prototype AI-assisted ocean analysis chat application.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  flutter_map: ^6.0.0
+  latlong2: ^0.9.1
+  google_fonts: ^6.1.0
+  fl_chart: ^0.66.2
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
