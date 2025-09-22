@@ -87,60 +87,38 @@ class _AnalysisPageState extends State<AnalysisPage> {
   FloatMarkerData? _selectedMarker;
 
   List<FloatMarkerData> _buildMarkers() {
-    final seeds = <LatLng>[
-      const LatLng(8.7, 76.7),
-      const LatLng(9.9, 76.2),
-      const LatLng(10.8, 79.0),
-      const LatLng(12.9, 74.8),
-      const LatLng(13.1, 80.3),
-      const LatLng(14.7, 74.0),
-      const LatLng(15.5, 73.8),
-      const LatLng(16.8, 82.2),
-      const LatLng(17.7, 83.4),
-      const LatLng(18.6, 72.9),
-      const LatLng(19.9, 72.8),
-      const LatLng(20.5, 86.7),
-      const LatLng(21.3, 88.1),
-      const LatLng(13.7, 92.7),
-      const LatLng(15.1, 92.9),
-      const LatLng(11.6, 94.3),
-      const LatLng(6.4, 93.8),
-      const LatLng(5.9, 80.5),
-      const LatLng(7.1, 77.4),
-      const LatLng(22.5, 68.7),
+    return [
+      _createMarker(
+        id: 'IN-9023',
+        position: const LatLng(15.5, 73.8),
+        temperature: 28.4,
+        depth: 120,
+        salinity: 34.8,
+        oxygen: 5.6,
+        status: FloatStatus.watch,
+        hoursAgo: 2,
+      ),
+      _createMarker(
+        id: 'IN-1775',
+        position: const LatLng(9.9, 76.2),
+        temperature: 27.1,
+        depth: 140,
+        salinity: 35.2,
+        oxygen: 6.1,
+        status: FloatStatus.stable,
+        hoursAgo: 4,
+      ),
+      _createMarker(
+        id: 'IN-4410',
+        position: const LatLng(18.1, 72.9),
+        temperature: 29.2,
+        depth: 95,
+        salinity: 34.5,
+        oxygen: 5.2,
+        status: FloatStatus.alert,
+        hoursAgo: 1,
+      ),
     ];
-
-    final random = math.Random(2024);
-    final markers = <FloatMarkerData>[];
-    for (var i = 0; i < 50; i++) {
-      final seed = seeds[i % seeds.length];
-      final latJitter = (random.nextDouble() - 0.5) * 1.2;
-      final lngJitter = (random.nextDouble() - 0.5) * 1.2;
-      final status = FloatStatus.values[i % FloatStatus.values.length];
-      final baseTemperature = 26.5 + random.nextDouble() * 4.5;
-      final depth = 80 + random.nextDouble() * 220;
-      final salinity = 34.2 + random.nextDouble() * 1.4;
-      final oxygen = 4.6 + random.nextDouble() * 2.0;
-      final hoursAgo = 1 + random.nextInt(36);
-
-      markers.add(
-        _createMarker(
-          id: 'IN-${9100 + i}',
-          position: LatLng(
-            seed.latitude + latJitter,
-            seed.longitude + lngJitter,
-          ),
-          temperature: baseTemperature,
-          depth: depth,
-          salinity: salinity,
-          oxygen: oxygen,
-          status: status,
-          hoursAgo: hoursAgo,
-        ),
-      );
-    }
-
-    return markers;
   }
 
   FloatMarkerData _createMarker({
@@ -299,6 +277,8 @@ class _AnalysisPageState extends State<AnalysisPage> {
                   const SizedBox(height: 24),
                   _ProfileChartsSection(data: data),
                   const SizedBox(height: 24),
+                  const _ProfilesDescription(),
+                  const SizedBox(height: 24),
                   _DownloadRow(floatId: data.id),
                 ],
               ),
@@ -327,10 +307,9 @@ class _AnalysisPageState extends State<AnalysisPage> {
           ),
           children: [
             TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              tileProvider: const NetworkTileProvider(),
-              maxZoom: 18,
-              userAgentPackageName: 'com.floatchat.app',
+              urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+              subdomains: const ['a', 'b', 'c'],
+              userAgentPackageName: 'com.example.floatchat',
             ),
             MarkerLayer(
               markers: _markers
@@ -342,7 +321,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
                       child: GestureDetector(
                         onTap: () {
                           setState(() => _selectedMarker = marker);
-                          _mapController.move(marker.position, 6.5);
+                          _openFloatDetails(marker);
                         },
                         child: _MapMarker(status: marker.status, label: marker.id),
                       ),
@@ -890,7 +869,6 @@ class _MarkerInsightCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final insights = _insightBullets(marker);
     return Material(
       elevation: 12,
       borderRadius: BorderRadius.circular(24),
@@ -974,59 +952,63 @@ class _MarkerInsightCard extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
-            ...insights
-                .map(
-                  (line) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('• ', style: theme.textTheme.bodyMedium),
-                        Expanded(
-                          child: Text(
-                            line,
-                            style: theme.textTheme.bodySmall,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-                .toList(),
+            const SizedBox(height: 12),
+            Text(
+              marker.status == FloatStatus.alert
+                  ? 'Della flagged a sharp thermocline compression and oxygen dip. Consider exporting full NetCDF for audit.'
+                  : marker.status == FloatStatus.watch
+                      ? 'Warm anomaly persists; overlay cyclone tracks or compare with last month to anticipate shifts.'
+                      : 'Conditions stable with healthy oxygenation. Perfect baseline for comparison.',
+              style: theme.textTheme.bodySmall,
+            ),
           ],
         ),
       ),
     );
   }
+}
 
-  static List<String> _insightBullets(FloatMarkerData marker) {
-    final statusSummary = switch (marker.status) {
-      FloatStatus.alert =>
-          'Alert status: temperature spike to ${marker.latestTemperature.toStringAsFixed(1)}°C with oxygen at ${marker.oxygen.toStringAsFixed(1)} ml/l.',
-      FloatStatus.watch =>
-          'Watch status: gradual warming to ${marker.latestTemperature.toStringAsFixed(1)}°C and mixed-layer depth near ${marker.depthHighlight.toStringAsFixed(0)} m.',
-      FloatStatus.stable =>
-          'Stable regime: balanced column at ${marker.latestTemperature.toStringAsFixed(1)}°C and oxygen ${marker.oxygen.toStringAsFixed(1)} ml/l.',
-    };
+class _ProfilesDescription extends StatelessWidget {
+  const _ProfilesDescription();
 
-    return [
-      statusSummary,
-      'Salinity trend holding around ${marker.salinity.toStringAsFixed(2)} PSU across the upper ${marker.depthHighlight.toStringAsFixed(0)} m.',
-      'Last update ${_relativeTime(marker.lastUpdated)}; compare with adjacent floats for mesoscale context.',
-      'Tap “View profile” to review the depth-resolved charts and export a CSV snapshot.',
-    ];
-  }
-
-  static String _relativeTime(DateTime timestamp) {
-    final difference = DateTime.now().difference(timestamp);
-    if (difference.inMinutes < 60) {
-      return '${difference.inMinutes} min ago';
-    }
-    if (difference.inHours < 24) {
-      return '${difference.inHours} h ago';
-    }
-    return '${difference.inDays} d ago';
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Profile Plots',
+          style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 4),
+        const Text(
+          'Y-axis: Depth (0–2000 m). X-axis: Temperature / Salinity / Oxygen etc. Shows how the ocean changes with depth.',
+        ),
+        const SizedBox(height: 12),
+        Text(
+          'Time Series of Profiles',
+          style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 4),
+        const Text(
+          'Profiles collected over time → compare January vs June at the same location.',
+        ),
+        const SizedBox(height: 12),
+        Text(
+          'Profile Map Integration',
+          style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 4),
+        const Text(
+          'Each float’s location on map → click → see its latest profile. Profiles = the core data product of ARGO.',
+        ),
+        const SizedBox(height: 12),
+        const Text(
+          'Use the dashboard to select a float, view the latest profile, overlay multiple profiles (e.g., before & after a cyclone), download in CSV/NetCDF, and spot anomalies like “surface warming > 1°C compared to baseline.”',
+        ),
+      ],
+    );
   }
 }
 

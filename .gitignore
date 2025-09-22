@@ -13,3 +13,5 @@ coverage/
 *.iml
 .idea/
 *.log
+.metadata
+.flutter-*
