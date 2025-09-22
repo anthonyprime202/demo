@@ -59,7 +59,7 @@ class _FloatChatAppState extends State<FloatChatApp> {
           home: Scaffold(
             appBar: FloatChatAppBar(
               profileMode: profileMode,
-              onTap: () => showProfileSelector(context, _profileNotifier),
+              profileNotifier: _profileNotifier,
             ),
             body: IndexedStack(
               index: _currentIndex,
@@ -103,11 +103,11 @@ class FloatChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   const FloatChatAppBar({
     super.key,
     required this.profileMode,
-    required this.onTap,
+    required this.profileNotifier,
   });
 
   final ProfileMode profileMode;
-  final VoidCallback onTap;
+  final ValueNotifier<ProfileMode> profileNotifier;
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +135,7 @@ class FloatChatAppBar extends StatelessWidget implements PreferredSizeWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: ProfileSelectorChip(
             profileMode: profileMode,
-            onPressed: onTap,
+            onPressed: () => showProfileSelector(context, profileNotifier),
           ),
         ),
       ],
